@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>井字遊戲</title>
+    <style>
+        .main {
+            display: flex;
+            justify-content: center;
+        }
+
+        .box {
+            display: flex;
+            width: 30%;
+            margin: 1px;
+        }
+
+        .showMessage {
+            display: flex;
+            font-size: 40px;
+            text-align: center;
+        }
+
+        .ticTacToeHome {
+            display: flex;
+            width: 50%;
+            flex-direction: row;
+            flex-wrap: wrap;
+            margin-left: 5%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="showMessage">這邊秀提示</div>
+
+        <div class="ticTacToeHome">
+
+
+        </div>
+    </div>
+</body>
+
+<script>
+    const ticTacToeHome = document.querySelector(".ticTacToeHome");
+    const showMessage = document.querySelector(".showMessage");
+
+    let round = 0;
+    let circleWinCount = 0;
+    let crossWinCount = 0;
+    let tieCount = 0;
+    let isCircleAttact = true;
+
+    function init() {
+        ticTacToeHome.innerHTML = "";
+        for (let i = 1; i <= 9; i++) {
+            let box = document.createElement("img");
+            box.value = i;
+            box.src = "img/background.png";
+            box.classList.add("box");
+            box.addEventListener("click",OK)
+            ticTacToeHome.appendChild(box);
+        }
+    }
+    init();
+
+    function OK(){console.log(`OK, this is ${this.value}`)}</script>
+
+</html>

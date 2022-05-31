@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>猜數字</title>
+
+    <style>
+        .init {
+            text-align: center;
+        }
+
+        .initBtn {
+            margin-top: 300px;
+            width: 150px;
+            height: 50px;
+            font-size: large;
+
+        }
+
+        .inputNumberContainer {
+            text-align: center;
+            font-size: 30px;
+            margin-top: 50px;
+        }
+
+        .inputNumber {
+            width: 200px;
+            height: 30px;
+        }
+
+        .showMessage {
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .guessNumberBtn {
+            margin: 20px;
+            width: 150px;
+            height: 50px;
+            font-size: large;
+        }
+
+        .wrongNumberContainer {
+            text-align: center;
+            font-size: larger;
+            margin: 30px;
+        }
+
+        .wrongNumber {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- <div class="init" id="init"><button class="initBtn" id="initBtn">開始遊戲</button></div> -->
+
+
+    <div class="main">
+        <div class="inputNumberContainer">
+            <div class="numberRange"> 請輸入數字</div>
+            <div><input type="number" class="inputNumber"></div>
+            <div><button class="guessNumberBtn">猜數字!</button></div>
+        </div>
+
+        <div class="wrongNumberContainer">
+        </div>
+
+        <div class="showMessage">
+        </div>
+
+    </div>
+
+</body>
+<script>
+
+    window.onload = main();
+
+    function main() {
+        function getRandomNumber(min, max) {
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        }
+
+        console.log("初始化數據。")
+        let life = 10;
+        const max = getRandomNumber(100, 200);
+        const min = getRandomNumber(1, 50);
+        const bingo = getRandomNumber(max, min);
+        let guessesCount = 0;
+
+        console.log(`正確的數字為：${bingo}。`);
+        const inputNumber = document.querySelector(".inputNumber");
+        const wrongNumberContainer = document.querySelector(".wrongNumberContainer");
+        const showMessage = document.querySelector(".showMessage");
+        const guessNumberBtn = document.querySelector(".guessNumberBtn");
+        const numberRange = document.querySelector(".numberRange");
+
+        console.log("渲染猜測次數。")
+        showMessage.innerHTML = `遊戲開始，剩餘次數為：${life}次`
+
+        console.log("渲染提示文字。")
+        numberRange.innerHTML = `數字範圍介於<span class="minNumber">${min}</span> ~ <span class="maxNumber">${max}</span>，請輸入數字`;
+        const minNumber = document.querySelector(".minNumber");
+        const maxNumber = document.querySelector(".maxNumber");
+
+        console.log("設定輸入區間。")
+        inputNumber.min = min;
+        inputNumber.max = max;
+
+
+        function showMessageAndQueryRestart(message) {
+            inputNumber.disabled = true;
+            guessNumberBtn.hidden = true;
+            showMessage.innerHTML = `<div>${message}</div>`;
+            let restartBtn = document.createElement("button");
+            restartBtn.addEventListener("click", function () {
+                location.reload();
+            })
+            restartBtn.innerHTML = "重新開始";
+            showMessage.append(restartBtn);
+
+        }
+
+        function showWrongMessageAndNumber(message) {
+            showMessage.innerHTML = message;
+            wrongNumber = document.createElement("span");
+            wrongNumber.innerHTML = inputNumber.value;
+            wrongNumber.classList.add("wrongNumber");
+            wrongNumberContainer.append(wrongNumber);
+            inputNumber.value = "";
+            inputNumber.focus();
+        }
+
+
+        console.log("綁定點擊事件。")
+        function checkNumber() {
+
+            if (inputNumber.value.trim() == "") {
+                showMessage.innerHTML = "輸入不得為空，請輸入數字!";
+                return;
+            }
+
+            if (inputNumber.value > max || inputNumber.value < min) {
+                showMessage.innerHTML = "數字超出範圍，請重新輸入!";
+                inputNumber.value = "";
+                inputNumber.focus();
+                return;
+            }
+
+            guessesCount++;
+
+            if (inputNumber.value == bingo) {
+                showMessageAndQueryRestart(`BINGO! 猜對了，你總共猜了${guessesCount}次!`);
+                return;
+            }
+
+
+            life--;
+            if (life == 0) {
+                showMessageAndQueryRestart(`GAMEOVER!遊戲結束，正確答案為${bingo}`);
+                return;
+            }
+
+            if (inputNumber.value > bingo) {
+                maxNumber.innerHTML = inputNumber.value;
+
+                showWrongMessageAndNumber(`猜錯了!還有${life}次機會!再<span style='color:blue'>小</span>一點!`);
+                return;
+            }
+
+            if (inputNumber.value < bingo) {
+                minNumber.innerHTML = inputNumber.value;
+                showWrongMessageAndNumber(`猜錯了!還有${life}次機會!再<span style='color:red'>大</span>一點!`);
+                return;
+            }
+
+        }
+
+
+        guessNumberBtn.addEventListener("click", checkNumber);
+        inputNumber.addEventListener("keypress", function (event) {
+            if (event.key == "Enter") {
+                checkNumber();
+            }
+        })
+    }
+
+
+
+
+</script>
+
+
+
+</html>
